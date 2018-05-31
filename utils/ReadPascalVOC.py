@@ -12,7 +12,7 @@ def read_dataset(data_dir):
     for file in train_data_list:
         filename = file.split("\n")[0]
         image = os.path.join(data_dir,"JPEGImages/",filename+".jpg")
-        annotation = os.path.join(data_dir,"SegmentationClassPreCode/",filename+".png")
+        annotation = os.path.join(data_dir,"SegmentationClassPreCode1/",filename+".png")
         record = {'image': image, 'annotation': annotation, 'filename': filename}
         train_records.append(record)
 
@@ -25,7 +25,7 @@ def read_dataset(data_dir):
     for file in train_data_list_new:
         filename = file.split("\n")[0]
         image = os.path.join(data_dir,"JPEGImages/",filename+".jpg")
-        annotation = os.path.join(data_dir,"SegmentationClassPreCode/",filename+".png")
+        annotation = os.path.join(data_dir,"SegmentationClassPreCode1/",filename+".png")
         record = {'image': image, 'annotation': annotation, 'filename': filename}
         train_records.append(record)
 
@@ -33,7 +33,7 @@ def read_dataset(data_dir):
     for file in valid_data_list_new:
         filename = file.split("\n")[0]
         image = os.path.join(data_dir,"JPEGImages/",filename+".jpg")
-        annotation = os.path.join(data_dir,"SegmentationClassPreCode/",filename+".png")
+        annotation = os.path.join(data_dir,"SegmentationClassPreCode1/",filename+".png")
         record = {'image': image, 'annotation': annotation, 'filename': filename}
         valid_records.append(record)
 

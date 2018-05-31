@@ -81,6 +81,7 @@ def main(argv=None):
         # MIT SceneParsing Dataset
         train_records, valid_records = ReadMITSceneParing.read_dataset(MIT_DIR)
         image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+        print(123)
         if MODE == 'train':
             train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
         val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)

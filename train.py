@@ -181,8 +181,27 @@ def main(argv=None):
                     # valid_images = np.reshape(valid_images, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 3])
                     # valid_annotations = np.reshape(valid_annotations, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
                     feed_dict = {images: valid_images, annotation: valid_annotations, keep_probability: 1.0}
-                    valid_loss = sess.run(loss, feed_dict=feed_dict)
+                    valid_loss, valid_preds = sess.run([loss, pred], feed_dict=feed_dict)
                     print("%s ---> Validation_loss: %g" % (datetime.datetime.now(), valid_loss))
+
+                    valid_annotations = np.squeeze(valid_annotations, axis=3)
+                    valid_preds = np.squeeze(valid_preds, axis=3)
+
+                    for itr in range(BATCH_SIZE):
+                        print("Saved image: %d" % itr)
+                        predict = valid_preds[itr,:,:]
+                        imagemat = np.squeeze(predict)
+                        image = PIL.Image.fromarray(np.uint8(imagemat))
+                        imgpath = "pred_" + str(itr) + ".jpg"
+                        image.save(imgpath)
+
+                        annotation = valid_annotations[itr, :, :]
+                        imagemat = np.squeeze(annotation)
+                        image = PIL.Image.fromarray(np.uint8(imagemat))
+                        imgpath = "anno_" + str(itr) + ".jpg"
+                        image.save(imgpath)
+
+
                 # 5000次训练后，记录模型参数
                 if itr % 5000 == 0:
                     saver.save(sess, LOGS_DIR + "model.ckpt", itr)

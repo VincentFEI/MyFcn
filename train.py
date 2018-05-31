@@ -89,8 +89,8 @@ def main(argv=None):
         train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
         image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
         if MODE == 'train':
-            train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
-        val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
+            train_dataset = BatchDatsetReader.BatchDatset(train_records[:10], image_options)
+        val_dataset = BatchDatsetReader.BatchDatset(valid_records[:10], image_options)
     else:
         print("Error : Void 'DATASET', 'DATASET' in json file should be 'MIT' or 'PASCAL'.")
         return

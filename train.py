@@ -196,19 +196,25 @@ def main(argv=None):
                     valid_annotations = np.squeeze(valid_annotations, axis=3)
                     valid_preds = np.squeeze(valid_preds, axis=3)
 
-                    for itr in range(BATCH_SIZE):
-                        print("Saved image: %d" % itr)
-                        predimg = valid_preds[itr,:,:]
-                        imagemat = np.squeeze(predimg)
-                        image = PIL.Image.fromarray(np.uint8(imagemat))
-                        imgpath = "pred_" + str(itr) + ".jpg"
-                        image.save(imgpath)
+                    for idx in range(BATCH_SIZE):
+                        print("Saved image: %d" % idx)
+                        predimg = valid_preds[idx,:,:]
+                        predimagemat = np.squeeze(predimg)
+                        predimage = PIL.Image.fromarray(np.uint8(predimagemat))
 
-                        annoimg = valid_annotations[itr, :, :]
-                        imagemat = np.squeeze(annoimg)
-                        image = PIL.Image.fromarray(np.uint8(imagemat))
-                        imgpath = "anno_" + str(itr) + ".jpg"
-                        image.save(imgpath)
+                        annoimg = valid_annotations[idx, :, :]
+                        annoimagemat = np.squeeze(annoimg)
+                        annoimage = PIL.Image.fromarray(np.uint8(annoimagemat))
+
+                        if DATASET == "MIT":
+                            predimgpath = "MIT_pred_" + str(idx) + ".jpg"
+                            annoimgpath = "MIT_anno_" + str(idx) + ".jpg"
+                        elif DATASET == "PASCAL":
+                            predimgpath = "PASCAL_pred_" + str(idx) + ".jpg"
+                            annoimgpath = "PASCAL_anno_" + str(idx) + ".jpg"
+
+                        predimage.save(predimgpath)
+                        annoimage.save(annoimgpath)
 
 
                 # 5000次训练后，记录模型参数

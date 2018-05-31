@@ -15,7 +15,7 @@ from utils import BatchDatsetReader
 from utils import ReadMITSceneParing
 
 # 设置使用的GPU编号
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # 参数列表
 IMAGE_WIDTH = None

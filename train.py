@@ -77,14 +77,14 @@ def main(argv=None):
     # val_label_path = "/DATA/234/gxrao1/DeepLearning/dataset/gtFine/val"
     # val_dataset = ReadDataset.ReadDataset(image_path=val_image_path, label_path=val_label_path)
 
-    if DATASET is "MIT":
+    if DATASET == "MIT":
         # MIT SceneParsing Dataset
         train_records, valid_records = ReadMITSceneParing.read_dataset(MIT_DIR)
         image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
         if MODE == 'train':
             train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
         val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
-    elif DATASET is "PASCAL":
+    elif DATASET == "PASCAL":
         # Pascal VOC Dataset
         train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
         image_options = {'resize': True, 'resize_size': IMAGE_SIZE}

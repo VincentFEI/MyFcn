@@ -99,7 +99,7 @@ def main(argv=None):
     # 构建计算图
     with tf.variable_scope('Graph') as scope:
         # 设置占位符
-        images = tf.placeholder(tf.int32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 3], name="input_image")
+        images = tf.placeholder(tf.float32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 3], name="input_image")
         annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 1], name="annotation")
         keep_probability = tf.placeholder(tf.float32, name="keep_probabilty")
 
@@ -147,7 +147,7 @@ def main(argv=None):
     # 开启一个新会话
     with tf.Session() as sess:
 
-        # 初始化Saver，用于存储模型参数，最多记录10个模型
+        # 初始化Saver，用于存储模型参数，最多记录11个模型
         saver = tf.train.Saver(max_to_keep=11)
         # 初始化Summary_writer，用于记录summary
         summary_writer = tf.summary.FileWriter(LOGS_DIR, sess.graph)

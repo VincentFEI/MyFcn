@@ -165,8 +165,8 @@ def main(argv=None):
             for itr in range(MAX_ITERATION):
                 # 获取训练数据
                 train_images, train_annotations = train_dataset.get_next_batch(BATCH_SIZE)
-                # train_images = np.reshape(train_images, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 3])
-                # train_annotations = np.reshape(train_annotations, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
+                train_images = np.reshape(train_images, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 3])
+                train_annotations = np.reshape(train_annotations, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
                 # 启动训练过程
                 feed_dict = {images: train_images, annotation: train_annotations, keep_probability: KEEP_PROBABILITY}
                 sess.run(train_op, feed_dict=feed_dict)

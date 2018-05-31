@@ -1,0 +1,16 @@
+{
+    "IMAGE_WIDTH" : 224,
+    "IMAGE_HEIGHT" : 224,
+    "IMAGE_SIZE" : 224,
+    "BATCH_SIZE" : 2,
+    "NUM_CLASSES" : 151,
+    "MAX_ITERATION" : 100001,
+    "LEARNING_RATE" : 1e-4,
+    "KEEP_PROBABILITY" : 0.85,
+    "DEBUG" : true,
+    "MODE" : "train",
+    "LOGS_DIR" : "logs8/",
+    "DATASET" : "MIT",
+    "PASCAL_DIR" : "/DATA/234/gxrao1/DeepLearning/VOC2012",
+    "MIT_DIR" : "/DATA/234/gxrao1/DeepLearning/FCN.tensorflow/Data_zoo/MIT_SceneParsing"
+}

@@ -1,7 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import tensorflow as tf
 import numpy as np
 from PIL import Image
@@ -11,15 +7,26 @@ import sys
 import time
 import random
 
-def read_single_image(path):
 
-    try:
-        image = np.array(Image.open(path))
-    except FileNotFoundError:
-        print("File is not found.")
+def sparse_softmax_cross_entropy_ignore_labels(logits=None, labels=None, name=None, ignores=None):
+    num_classes = logits.get_shape()[3]
+    labels_onehot = tf.one_hot(labels, num_classes)
 
-    return image
+    if ignores is None:
+        ignores = num_classes - 1
 
+    t1 = tf.zeros_like(labels_onehot[:, :, :, :ignores])
+    t2 = tf.expand_dims(labels_onehot[:, :, :, ignores], -1)
+    t3 = tf.zeros_like(labels_onehot[:, :, :, ignores + 1:])
+    t4 = tf.concat(axis=3, values=[t1, t2, t3])
+    logits_fix = tf.where(t4 > 0, 1e30 * tf.ones_like(logits), logits)
+
+    if name is None:
+        loss = tf.nn.softmax_cross_entropy_with_logits(logits=logits_fix, labels=labels_onehot)
+    else:
+        loss = tf.nn.softmax_cross_entropy_with_logits(logits=logits_fix, labels=labels_onehot, name=name)
+
+    return loss
 
 # def random_crop(image, annotation, height, width):
 #     old_width = image.shape[1]

@@ -15,7 +15,7 @@ from utils import BatchDatsetReader
 from utils import ReadMITSceneParing
 
 # 设置使用的GPU编号
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 # 参数列表
 IMAGE_WIDTH = None
@@ -117,9 +117,18 @@ def main(argv=None):
 
         with tf.variable_scope('Loss'):
             # 计算交叉熵Loss
-            entropy_loss = tf.reduce_mean((tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,
-                                                                                          labels=tf.squeeze(annotation, squeeze_dims=[3]),
-                                                                                          name="entropy")))
+            if DATASET == "PASCAL":
+                entropy_loss = tf.reduce_mean((utlis.sparse_softmax_cross_entropy_ignore_labels(logits=logits,
+                                                                                              labels=tf.squeeze(
+                                                                                                  annotation,
+                                                                                                  squeeze_dims=[3]),
+                                                                                              name="entropy")))
+            else:
+                entropy_loss = tf.reduce_mean((tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,
+                                                                                              labels=tf.squeeze(
+                                                                                                  annotation,
+                                                                                                  squeeze_dims=[3]),
+                                                                                              name="entropy")))
             # 添加交叉熵Loss到总Loss中
             tf.add_to_collection(tf.GraphKeys.LOSSES, entropy_loss)
             # 添加交叉熵Loss到summary

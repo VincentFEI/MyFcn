@@ -189,14 +189,14 @@ def main(argv=None):
 
                     for itr in range(BATCH_SIZE):
                         print("Saved image: %d" % itr)
-                        predict = valid_preds[itr,:,:]
-                        imagemat = np.squeeze(predict)
+                        predimg = valid_preds[itr,:,:]
+                        imagemat = np.squeeze(predimg)
                         image = PIL.Image.fromarray(np.uint8(imagemat))
                         imgpath = "pred_" + str(itr) + ".jpg"
                         image.save(imgpath)
 
-                        annotation = valid_annotations[itr, :, :]
-                        imagemat = np.squeeze(annotation)
+                        annoimg = valid_annotations[itr, :, :]
+                        imagemat = np.squeeze(annoimg)
                         image = PIL.Image.fromarray(np.uint8(imagemat))
                         imgpath = "anno_" + str(itr) + ".jpg"
                         image.save(imgpath)

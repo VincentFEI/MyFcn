@@ -1,9 +1,12 @@
+import sys
 import os
 import datetime
 import json
 import numpy as np
 import tensorflow as tf
 import PIL.Image
+import scipy.misc as misc
+
 import model.fcn32_vgg as FCN32
 import model.fcn16_vgg as FCN16
 import model.fcn8_vgg as FCN8
@@ -29,13 +32,19 @@ KEEP_PROBABILITY = None
 DEBUG = None
 MODE = None
 LOGS_DIR = None
+RESULT_DIR = None
 DATASET = None
 PASCAL_DIR = None
 MIT_DIR = None
 
 def main(argv=None):
+    if len(sys.argv) > 1:
+        paramsfile = sys.argv[1]
+    else:
+        paramsfile = 'params.json'
+
     # 从JSON文件中读取外部参数
-    with open('params.json', 'r') as f:
+    with open(paramsfile, 'r') as f:
         params_dict = json.load(f)
 
     global IMAGE_WIDTH
@@ -61,6 +70,8 @@ def main(argv=None):
     MODE = params_dict["MODE"]
     global LOGS_DIR
     LOGS_DIR = params_dict["LOGS_DIR"]
+    global RESULT_DIR
+    RESULT_DIR = params_dict["RESULT_DIR"]
     global DATASET
     DATASET = params_dict["DATASET"]
     global PASCAL_DIR
@@ -200,11 +211,11 @@ def main(argv=None):
                         print("Saved image: %d" % idx)
                         predimg = valid_preds[idx,:,:]
                         predimagemat = np.squeeze(predimg)
-                        predimage = PIL.Image.fromarray(np.uint8(predimagemat))
+                        # predimage = PIL.Image.fromarray(np.uint8(predimagemat))
 
                         annoimg = valid_annotations[idx, :, :]
                         annoimagemat = np.squeeze(annoimg)
-                        annoimage = PIL.Image.fromarray(np.uint8(annoimagemat))
+                        # annoimage = PIL.Image.fromarray(np.uint8(annoimagemat))
 
                         if DATASET == "MIT":
                             predimgpath = "MIT_pred_" + str(idx) + ".jpg"
@@ -213,8 +224,8 @@ def main(argv=None):
                             predimgpath = "PASCAL_pred_" + str(idx) + ".jpg"
                             annoimgpath = "PASCAL_anno_" + str(idx) + ".jpg"
 
-                        predimage.save(predimgpath)
-                        annoimage.save(annoimgpath)
+                        misc.imsave(predimgpath, predimagemat.astype(np.uint8))
+                        misc.imsave(annoimgpath, annoimagemat.astype(np.uint8))
 
 
                 # 5000次训练后，记录模型参数
@@ -223,21 +234,43 @@ def main(argv=None):
 
         elif MODE == "test":
 
-            # 获取测试数据
-            # # CityScapes Dataset
-            # test_image_path = "/DATA/234/gxrao1/DeepLearning/dataset/leftImg8bit/test"
-            # test_dataset = ReadDataset.ReadDataset(image_path=test_image_path)
-            # test_images = test_dataset.get_next_batch(BATCH_SIZE)
-            test_images = val_dataset.get_next_batch(BATCH_SIZE)
-            # 启动测试过程
-            feed_dict = {images: test_images, keep_probability: 1.0}
-            predict = sess.run(pred, feed_dict=feed_dict)
-            print(predict)
-            print(predict.shape)
-            imagemat = np.squeeze(predict)
-            print(imagemat.shape)
-            image = PIL.Image.fromarray(np.uint8(imagemat))
-            image.save("test.jpg")
+            if DATASET == "MIT":
+                for test_idx in range(2000):
+                    print("MIT Test image: %d" % test_idx)
+                    test_images, test_annotations = val_dataset.get_next_batch(1)
+                    feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
+                    test_preds = sess.run(pred, feed_dict=feed_dict)
+
+                    test_images = np.squeeze(test_images)
+                    test_annotations = np.squeeze(test_annotations)
+                    test_preds = np.squeeze(test_preds)
+
+                    test_images_path = RESULT_DIR + "MIT_img_"  + str(test_idx) + ".png"
+                    test_annos_path  = RESULT_DIR + "MIT_anno_" + str(test_idx) + ".png"
+                    test_preds_path  = RESULT_DIR + "MIT_pred_" + str(test_idx) + ".png"
+
+                    misc.imsave(test_images_path, test_images.astype(np.uint8))
+                    misc.imsave(test_annos_path, test_annotations.astype(np.uint8))
+                    misc.imsave(test_preds_path, test_preds.astype(np.uint8))
+
+            elif DATASET == "PASCAL":
+                for test_idx in range(500):
+                    print("PASCAL Test image: %d" % test_idx)
+                    test_images, test_annotations = val_dataset.get_next_batch(1)
+                    feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
+                    test_preds = sess.run(pred, feed_dict=feed_dict)
+
+                    test_images = np.squeeze(test_images)
+                    test_annotations = np.squeeze(test_annotations)
+                    test_preds = np.squeeze(test_preds)
+
+                    test_images_path = RESULT_DIR + "PASCAL_img_"  + str(test_idx) + ".png"
+                    test_annos_path  = RESULT_DIR + "PASCAL_anno_" + str(test_idx) + ".png"
+                    test_preds_path  = RESULT_DIR + "PASCAL_pred_" + str(test_idx) + ".png"
+
+                    misc.imsave(test_images_path, test_images.astype(np.uint8))
+                    misc.imsave(test_annos_path, test_annotations.astype(np.uint8))
+                    misc.imsave(test_preds_path, test_preds.astype(np.uint8))
 
 
 if __name__ == "__main__":

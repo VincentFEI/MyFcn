@@ -18,7 +18,7 @@ from utils import BatchDatsetReader
 from utils import ReadMITSceneParing
 
 # 设置使用的GPU编号
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 # 参数列表
 IMAGE_WIDTH = None
@@ -91,7 +91,8 @@ def main(argv=None):
     if DATASET == "MIT":
         # MIT SceneParsing Dataset
         train_records, valid_records = ReadMITSceneParing.read_dataset(MIT_DIR)
-        image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+        # image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+        image_options = {'resize': False}
         if MODE == 'train':
             train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
         val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
@@ -110,8 +111,10 @@ def main(argv=None):
     # 构建计算图
     with tf.variable_scope('Graph') as scope:
         # 设置占位符
-        images = tf.placeholder(tf.float32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 3], name="input_image")
-        annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 1], name="annotation")
+        # images = tf.placeholder(tf.float32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 3], name="input_image")
+        # annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 1], name="annotation")
+        images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
+        annotation = tf.placeholder(tf.int32, shape=[None, None, None, 1], name="annotation")
         keep_probability = tf.placeholder(tf.float32, name="keep_probabilty")
 
         # 构建网络模型

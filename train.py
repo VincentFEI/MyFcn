@@ -94,8 +94,8 @@ def main(argv=None):
         # image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
         image_options = {'resize': False}
         if MODE == 'train':
-            train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
-        val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
+            train_dataset = BatchDatsetReader.BatchDatset(train_records[:10], image_options)
+        val_dataset = BatchDatsetReader.BatchDatset(valid_records[:10], image_options)
     elif DATASET == "PASCAL":
         # Pascal VOC Dataset
         train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
@@ -116,7 +116,7 @@ def main(argv=None):
         # images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
         # annotation = tf.placeholder(tf.int32, shape=[None, None, None, 1], name="annotation")
         images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
-        annotation = tf.placeholder(tf.int32, shape=[None, None, None, 3], name="annotation")
+        annotation = tf.placeholder(tf.int32, shape=[None, None, None, 1], name="annotation")
 
         keep_probability = tf.placeholder(tf.float32, name="keep_probabilty")
 

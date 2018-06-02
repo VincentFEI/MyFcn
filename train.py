@@ -115,8 +115,8 @@ def main(argv=None):
         # annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 1], name="annotation")
         # images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
         # annotation = tf.placeholder(tf.int32, shape=[None, None, None, 1], name="annotation")
-        images = tf.placeholder(name="input_image")
-        annotation = tf.placeholder(name="annotation")
+        images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
+        annotation = tf.placeholder(tf.int32, shape=[None, None, None, 3], name="annotation")
 
         keep_probability = tf.placeholder(tf.float32, name="keep_probabilty")
 

@@ -18,7 +18,7 @@ from utils import BatchDatsetReader
 from utils import ReadMITSceneParing
 
 # 设置使用的GPU编号
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # 参数列表
 IMAGE_WIDTH = None
@@ -99,7 +99,8 @@ def main(argv=None):
     elif DATASET == "PASCAL":
         # Pascal VOC Dataset
         train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
-        image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+        # image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+        image_options = {'resize': False}
         if MODE == 'train':
             train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
         val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
@@ -113,8 +114,6 @@ def main(argv=None):
         # 设置占位符
         # images = tf.placeholder(tf.float32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 3], name="input_image")
         # annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 1], name="annotation")
-        # images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
-        # annotation = tf.placeholder(tf.int32, shape=[None, None, None, 1], name="annotation")
         images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
         annotation = tf.placeholder(tf.int32, shape=[None, None, None, 1], name="annotation")
 
@@ -197,8 +196,6 @@ def main(argv=None):
                 train_images = np.asarray(train_images_list)
                 train_annotations = np.asarray(train_annotations_lsit)
 
-                # train_images = np.reshape(train_images, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 3])
-                # train_annotations = np.reshape(train_annotations, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
                 # 启动训练过程
                 feed_dict = {images: train_images, annotation: train_annotations, keep_probability: KEEP_PROBABILITY}
                 sess.run(train_op, feed_dict=feed_dict)
@@ -218,8 +215,6 @@ def main(argv=None):
                     valid_annotations = np.asarray(valid_annotations_lsit)
 
 
-                    # valid_images = np.reshape(valid_images, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 3])
-                    # valid_annotations = np.reshape(valid_annotations, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
                     feed_dict = {images: valid_images, annotation: valid_annotations, keep_probability: 1.0}
                     valid_loss, valid_preds = sess.run([loss, pred], feed_dict=feed_dict)
                     print("%s ---> Validation_loss: %g" % (datetime.datetime.now(), valid_loss))
@@ -231,11 +226,8 @@ def main(argv=None):
                         print("Saved image: %d" % idx)
                         predimg = valid_preds[idx,:,:]
                         predimagemat = np.squeeze(predimg)
-                        # predimage = PIL.Image.fromarray(np.uint8(predimagemat))
-
                         annoimg = valid_annotations[idx, :, :]
                         annoimagemat = np.squeeze(annoimg)
-                        # annoimage = PIL.Image.fromarray(np.uint8(annoimagemat))
 
                         if DATASET == "MIT":
                             predimgpath = "MIT_pred_" + str(idx) + ".jpg"

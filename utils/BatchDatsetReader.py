@@ -32,10 +32,11 @@ class BatchDatset:
 
     def _read_images(self):
         self.__channels = True
-        self.images = np.array([self._transform(filename['image']) for filename in self.files])
+        images = [self._transform(filename['image']) for filename in self.files]
+        self.images = np.asarray(images)
         self.__channels = False
-        self.annotations = np.array(
-            [np.expand_dims(self._transform(filename['annotation']), axis=3) for filename in self.files])
+        annotations = [np.expand_dims(self._transform(filename['annotation']), axis=3) for filename in self.files]
+        self.annotations = np.asarray(annotations)
         print (self.images.shape)
         print (self.annotations.shape)
 

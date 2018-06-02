@@ -210,6 +210,14 @@ def main(argv=None):
                 # 500次训练后，计算一次验证集上的loss
                 if itr % 500 == 0:
                     valid_images, valid_annotations = val_dataset.get_next_batch(BATCH_SIZE)
+
+                    # 这一步只在数据不resize的时候使用
+                    valid_images_list = list(valid_images)
+                    valid_annotations_lsit = list(valid_annotations)
+                    valid_images = np.asarray(valid_images_list)
+                    valid_annotations = np.asarray(valid_annotations_lsit)
+
+                    
                     # valid_images = np.reshape(valid_images, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 3])
                     # valid_annotations = np.reshape(valid_annotations, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
                     feed_dict = {images: valid_images, annotation: valid_annotations, keep_probability: 1.0}

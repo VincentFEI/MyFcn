@@ -5,6 +5,7 @@ from tensorflow.python.platform import gfile
 import glob
 
 
+
 def read_dataset(data_dir):
     pickle_filename = "MITSceneParsing.pickle"
     pickle_filepath = os.path.join(data_dir, pickle_filename)
@@ -55,4 +56,5 @@ def create_image_lists(image_dir):
         print ('No. of %s files: %d' % (directory, no_of_images))
 
     return image_list
+
 

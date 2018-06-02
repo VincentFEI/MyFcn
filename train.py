@@ -94,8 +94,8 @@ def main(argv=None):
         # image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
         image_options = {'resize': False}
         if MODE == 'train':
-            train_dataset = BatchDatsetReader.BatchDatset(train_records[:10], image_options)
-        val_dataset = BatchDatsetReader.BatchDatset(valid_records[:10], image_options)
+            train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
+        val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
     elif DATASET == "PASCAL":
         # Pascal VOC Dataset
         train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
@@ -217,7 +217,7 @@ def main(argv=None):
                     valid_images = np.asarray(valid_images_list)
                     valid_annotations = np.asarray(valid_annotations_lsit)
 
-                    
+
                     # valid_images = np.reshape(valid_images, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 3])
                     # valid_annotations = np.reshape(valid_annotations, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
                     feed_dict = {images: valid_images, annotation: valid_annotations, keep_probability: 1.0}

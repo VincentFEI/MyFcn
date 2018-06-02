@@ -191,6 +191,12 @@ def main(argv=None):
             for itr in range(MAX_ITERATION):
                 # 获取训练数据
                 train_images, train_annotations = train_dataset.get_next_batch(BATCH_SIZE)
+                # 这一步只在数据不resize的时候使用
+                train_images_list = list(train_images)
+                train_annotations_lsit = list(train_annotations)
+                train_images = np.asarray(train_images_list)
+                train_annotations = np.asarray(train_annotations_lsit)
+
                 # train_images = np.reshape(train_images, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 3])
                 # train_annotations = np.reshape(train_annotations, [-1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
                 # 启动训练过程

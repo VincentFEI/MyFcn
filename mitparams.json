@@ -2,7 +2,7 @@
     "IMAGE_WIDTH" : 224,
     "IMAGE_HEIGHT" : 224,
     "IMAGE_SIZE" : 224,
-    "BATCH_SIZE" : 2,
+    "BATCH_SIZE" : 1,
     "NUM_CLASSES" : 151,
     "MAX_ITERATION" : 100002,
     "LEARNING_RATE" : 1e-4,

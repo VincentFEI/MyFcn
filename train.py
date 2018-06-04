@@ -255,7 +255,7 @@ def main(argv=None):
                     test_annotations_lsit = list(test_annotations)
                     test_images = np.asarray(test_images_list)
                     test_annotations = np.asarray(test_annotations_lsit)
-                    
+
                     feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
                     test_preds = sess.run(pred, feed_dict=feed_dict)
 

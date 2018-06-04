@@ -250,6 +250,12 @@ def main(argv=None):
                 for test_idx in range(2000):
                     print("MIT Test image: %d" % test_idx)
                     test_images, test_annotations = val_dataset.get_next_batch(1)
+                    # 这一步只在数据不resize的时候使用
+                    test_images_list = list(test_images)
+                    test_annotations_lsit = list(test_annotations)
+                    test_images = np.asarray(test_images_list)
+                    test_annotations = np.asarray(test_annotations_lsit)
+                    
                     feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
                     test_preds = sess.run(pred, feed_dict=feed_dict)
 
@@ -269,6 +275,12 @@ def main(argv=None):
                 for test_idx in range(500):
                     print("PASCAL Test image: %d" % test_idx)
                     test_images, test_annotations = val_dataset.get_next_batch(1)
+                    # 这一步只在数据不resize的时候使用
+                    test_images_list = list(test_images)
+                    test_annotations_lsit = list(test_annotations)
+                    test_images = np.asarray(test_images_list)
+                    test_annotations = np.asarray(test_annotations_lsit)
+
                     feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
                     test_preds = sess.run(pred, feed_dict=feed_dict)
 

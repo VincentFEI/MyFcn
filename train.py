@@ -9,7 +9,8 @@ import scipy.misc as misc
 
 import model.fcn32_vgg as FCN32
 import model.fcn16_vgg as FCN16
-import model.fcn8_vgg as FCN8
+# import model.fcn8_vgg as FCN8
+import model.fcn8_vgg_notrain as FCN8
 
 from utils import ReadDataset
 from utils import utlis
@@ -19,6 +20,7 @@ from utils import ReadMITSceneParing
 
 # 设置使用的GPU编号
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+NO_RESIZE = False
 
 # 参数列表
 IMAGE_WIDTH = None
@@ -91,19 +93,29 @@ def main(argv=None):
     if DATASET == "MIT":
         # MIT SceneParsing Dataset
         train_records, valid_records = ReadMITSceneParing.read_dataset(MIT_DIR)
-        # image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
-        image_options = {'resize': False}
+
+        if NO_RESIZE == True:
+            image_options = {'resize': False}
+        else:
+            image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+
         if MODE == 'train':
             train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
         val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
+
     elif DATASET == "PASCAL":
         # Pascal VOC Dataset
         train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
-        # image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
-        image_options = {'resize': False}
+
+        if NO_RESIZE == True:
+            image_options = {'resize': False}
+        else:
+            image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+
         if MODE == 'train':
             train_dataset = BatchDatsetReader.BatchDatset(train_records, image_options)
         val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
+
     else:
         print("Error : Void 'DATASET', 'DATASET' in json file should be 'MIT' or 'PASCAL'.")
         return
@@ -112,10 +124,13 @@ def main(argv=None):
     # 构建计算图
     with tf.variable_scope('Graph') as scope:
         # 设置占位符
-        # images = tf.placeholder(tf.float32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 3], name="input_image")
-        # annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 1], name="annotation")
-        images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
-        annotation = tf.placeholder(tf.int32, shape=[None, None, None, 1], name="annotation")
+        if NO_RESIZE == True:
+            images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name="input_image")
+            annotation = tf.placeholder(tf.int32, shape=[None, None, None, 1], name="annotation")
+        else:
+            images = tf.placeholder(tf.float32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 3], name="input_image")
+            annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_WIDTH, IMAGE_HEIGHT, 1], name="annotation")
+
 
         keep_probability = tf.placeholder(tf.float32, name="keep_probabilty")
 
@@ -190,11 +205,13 @@ def main(argv=None):
             for itr in range(MAX_ITERATION):
                 # 获取训练数据
                 train_images, train_annotations = train_dataset.get_next_batch(BATCH_SIZE)
-                # 这一步只在数据不resize的时候使用
-                train_images_list = list(train_images)
-                train_annotations_lsit = list(train_annotations)
-                train_images = np.asarray(train_images_list)
-                train_annotations = np.asarray(train_annotations_lsit)
+
+                if NO_RESIZE == True:
+                    # 这一步只在数据不resize的时候使用
+                    train_images_list = list(train_images)
+                    train_annotations_lsit = list(train_annotations)
+                    train_images = np.asarray(train_images_list)
+                    train_annotations = np.asarray(train_annotations_lsit)
 
                 # 启动训练过程
                 feed_dict = {images: train_images, annotation: train_annotations, keep_probability: KEEP_PROBABILITY}
@@ -208,11 +225,12 @@ def main(argv=None):
                 if itr % 500 == 0:
                     valid_images, valid_annotations = val_dataset.get_next_batch(BATCH_SIZE)
 
-                    # 这一步只在数据不resize的时候使用
-                    valid_images_list = list(valid_images)
-                    valid_annotations_lsit = list(valid_annotations)
-                    valid_images = np.asarray(valid_images_list)
-                    valid_annotations = np.asarray(valid_annotations_lsit)
+                    if NO_RESIZE == True:
+                        # 这一步只在数据不resize的时候使用
+                        valid_images_list = list(valid_images)
+                        valid_annotations_lsit = list(valid_annotations)
+                        valid_images = np.asarray(valid_images_list)
+                        valid_annotations = np.asarray(valid_annotations_lsit)
 
 
                     feed_dict = {images: valid_images, annotation: valid_annotations, keep_probability: 1.0}
@@ -250,11 +268,13 @@ def main(argv=None):
                 for test_idx in range(2000):
                     print("MIT Test image: %d" % test_idx)
                     test_images, test_annotations = val_dataset.get_next_batch(1)
-                    # 这一步只在数据不resize的时候使用
-                    test_images_list = list(test_images)
-                    test_annotations_lsit = list(test_annotations)
-                    test_images = np.asarray(test_images_list)
-                    test_annotations = np.asarray(test_annotations_lsit)
+
+                    if NO_RESIZE == True:
+                        # 这一步只在数据不resize的时候使用
+                        test_images_list = list(test_images)
+                        test_annotations_lsit = list(test_annotations)
+                        test_images = np.asarray(test_images_list)
+                        test_annotations = np.asarray(test_annotations_lsit)
 
                     feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
                     test_preds = sess.run(pred, feed_dict=feed_dict)
@@ -275,11 +295,13 @@ def main(argv=None):
                 for test_idx in range(500):
                     print("PASCAL Test image: %d" % test_idx)
                     test_images, test_annotations = val_dataset.get_next_batch(1)
-                    # 这一步只在数据不resize的时候使用
-                    test_images_list = list(test_images)
-                    test_annotations_lsit = list(test_annotations)
-                    test_images = np.asarray(test_images_list)
-                    test_annotations = np.asarray(test_annotations_lsit)
+
+                    if NO_RESIZE == True:
+                        # 这一步只在数据不resize的时候使用
+                        test_images_list = list(test_images)
+                        test_annotations_lsit = list(test_annotations)
+                        test_images = np.asarray(test_images_list)
+                        test_annotations = np.asarray(test_annotations_lsit)
 
                     feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
                     test_preds = sess.run(pred, feed_dict=feed_dict)

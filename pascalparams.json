@@ -8,9 +8,9 @@
     "LEARNING_RATE" : 1e-4,
     "KEEP_PROBABILITY" : 0.85,
     "DEBUG" : true,
-    "MODE" : "train",
+    "MODE" : "test",
     "LOGS_DIR" : "pascalogs_no_resize/",
-    "RESULT_DIR" : "pascalresult/",
+    "RESULT_DIR" : "pascalresult_no_resize/",
     "DATASET" : "PASCAL",
     "PASCAL_DIR" : "/DATA/234/gxrao1/DeepLearning/VOC2012",
     "MIT_DIR" : "/DATA/234/gxrao1/DeepLearning/FCN.tensorflow/Data_zoo/MIT_SceneParsing"

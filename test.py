@@ -92,6 +92,7 @@ def main(argv=None):
 
     ckpt = tf.train.get_checkpoint_state(LOGS_DIR)
     print(ckpt)
+    print(type(ckpt))
 
     '''
     # 读取数据

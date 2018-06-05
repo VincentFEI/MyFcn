@@ -19,7 +19,7 @@ from utils import BatchDatsetReader
 from utils import ReadMITSceneParing
 
 # 设置使用的GPU编号
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 
 # 参数列表

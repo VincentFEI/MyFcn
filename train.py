@@ -20,7 +20,7 @@ from utils import ReadMITSceneParing
 
 # 设置使用的GPU编号
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-NO_RESIZE = False
+NO_RESIZE = True
 
 # 参数列表
 IMAGE_WIDTH = None

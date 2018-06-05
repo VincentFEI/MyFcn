@@ -10,8 +10,8 @@
     "NO_RESIZE" : true,
     "DEBUG" : true,
     "MODE" : "train",
-    "LOGS_DIR" : "pascalogs_no_resize/",
-    "RESULT_DIR" : "pascalresult_no_resize_2/",
+    "LOGS_DIR" : "pascalogs/",
+    "RESULT_DIR" : "pascalresult_test_no_resize_2/",
     "DATASET" : "PASCAL",
     "PASCAL_DIR" : "/DATA/234/gxrao1/DeepLearning/VOC2012",
     "MIT_DIR" : "/DATA/234/gxrao1/DeepLearning/FCN.tensorflow/Data_zoo/MIT_SceneParsing"

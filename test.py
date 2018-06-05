@@ -94,6 +94,10 @@ def main(argv=None):
     print(ckpt)
     print(type(ckpt))
 
+    if ckpt and ckpt.model_checkpoint_path:
+        for i in range(11):
+            print("HAHAHAH:")
+            print(ckpt.all_model_checkpoint_paths[i])
     '''
     # 读取数据
 

@@ -102,32 +102,32 @@ def main(argv=None):
     # val_label_path = "/DATA/234/gxrao1/DeepLearning/dataset/gtFine/val"
     # val_dataset = ReadDataset.ReadDataset(image_path=val_image_path, label_path=val_label_path)
 
-    if DATASET == "MIT":
-        # MIT SceneParsing Dataset
-        train_records, valid_records = ReadMITSceneParing.read_dataset(MIT_DIR)
-
-        if NO_RESIZE == True:
-            image_options = {'resize': False}
-        else:
-            image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
-
-
-        val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
-
-    elif DATASET == "PASCAL":
-        # Pascal VOC Dataset
-        train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
-
-        if NO_RESIZE == True:
-            image_options = {'resize': False}
-        else:
-            image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
-
-        val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
-
-    else:
-        print("Error : Void 'DATASET', 'DATASET' in json file should be 'MIT' or 'PASCAL'.")
-        return
+    # if DATASET == "MIT":
+    #     # MIT SceneParsing Dataset
+    #     train_records, valid_records = ReadMITSceneParing.read_dataset(MIT_DIR)
+    #
+    #     if NO_RESIZE == True:
+    #         image_options = {'resize': False}
+    #     else:
+    #         image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+    #
+    #
+    #     val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
+    #
+    # elif DATASET == "PASCAL":
+    #     # Pascal VOC Dataset
+    #     train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
+    #
+    #     if NO_RESIZE == True:
+    #         image_options = {'resize': False}
+    #     else:
+    #         image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
+    #
+    #     val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
+    #
+    # else:
+    #     print("Error : Void 'DATASET', 'DATASET' in json file should be 'MIT' or 'PASCAL'.")
+    #     return
 
     ## *****************************************************************************************************************
     ## *****************************************************************************************************************
@@ -209,75 +209,86 @@ def main(argv=None):
         # 初始化所有参数
         sess.run(tf.global_variables_initializer())
 
-        model_index_list = [0,2,4,6,8]
-        result_dir_list = ["pascalresult_50000", "pascalresult_55000", "pascalresult_60000", "pascalresult_65000",
-                           "pascalresult_70000", "pascalresult_75000", "pascalresult_80000", "pascalresult_85000",
-                           "pascalresult_90000", "pascalresult_95000"]
-        # for model_index in model_index_list:
+        model_index_list = [2,4,6,8]
+        result_dir_list = ["pascalresult_50000/", "pascalresult_55000/", "pascalresult_60000/", "pascalresult_65000/",
+                           "pascalresult_70000/", "pascalresult_75000/", "pascalresult_80000/", "pascalresult_85000/",
+                           "pascalresult_90000/", "pascalresult_95000/"]
+        for model_index in model_index_list:
 
-        # 判断是否有训练过的模型，即ckpt文件，有的话直接读取
-        ckpt = tf.train.get_checkpoint_state(LOGS_DIR)
-        if ckpt and ckpt.model_checkpoint_path:
-            model_index = 2
-            saver.restore(sess, ckpt.all_model_checkpoint_paths[model_index])
-            print("Model path: " + LOGS_DIR + ckpt.all_model_checkpoint_paths[model_index])
-            print("Model restored...")
-        ## *************************************************************************************************************
-        RESULT_DIR = result_dir_list[model_index]
+            RESULT_DIR = result_dir_list[model_index]
+            # Pascal VOC Dataset
+            train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
 
-        if DATASET == "MIT":
-            for test_idx in range(2000):
-                print("MIT Test image: %d" % test_idx)
-                test_images, test_annotations = val_dataset.get_next_batch(1)
+            if NO_RESIZE == True:
+                image_options = {'resize': False}
+            else:
+                image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
 
-                if NO_RESIZE == True:
-                    # 这一步只在数据不resize的时候使用
-                    test_images_list = list(test_images)
-                    test_annotations_lsit = list(test_annotations)
-                    test_images = np.asarray(test_images_list)
-                    test_annotations = np.asarray(test_annotations_lsit)
+            val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
 
-                feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
-                test_preds = sess.run(pred, feed_dict=feed_dict)
 
-                test_images = np.squeeze(test_images)
-                test_annotations = np.squeeze(test_annotations)
-                test_preds = np.squeeze(test_preds)
+            # 判断是否有训练过的模型，即ckpt文件，有的话直接读取
+            ckpt = tf.train.get_checkpoint_state(LOGS_DIR)
+            if ckpt and ckpt.model_checkpoint_path:
+                saver.restore(sess, ckpt.all_model_checkpoint_paths[model_index])
+                print("Model path: " + LOGS_DIR + ckpt.all_model_checkpoint_paths[model_index])
+                print("Model restored...")
+            ## *************************************************************************************************************
 
-                test_images_path = RESULT_DIR + "MIT_img_"  + str(test_idx) + ".png"
-                test_annos_path  = RESULT_DIR + "MIT_anno_" + str(test_idx) + ".png"
-                test_preds_path  = RESULT_DIR + "MIT_pred_" + str(test_idx) + ".png"
 
-                misc.imsave(test_images_path, test_images.astype(np.uint8))
-                misc.imsave(test_annos_path, test_annotations.astype(np.uint8))
-                misc.imsave(test_preds_path, test_preds.astype(np.uint8))
+            if DATASET == "MIT":
+                for test_idx in range(2000):
+                    print("MIT Test image: %d" % test_idx)
+                    test_images, test_annotations = val_dataset.get_next_batch(1)
 
-        elif DATASET == "PASCAL":
-            for test_idx in range(500):
-                print("PASCAL Test image: %d" % test_idx)
-                test_images, test_annotations = val_dataset.get_next_batch(1)
+                    if NO_RESIZE == True:
+                        # 这一步只在数据不resize的时候使用
+                        test_images_list = list(test_images)
+                        test_annotations_lsit = list(test_annotations)
+                        test_images = np.asarray(test_images_list)
+                        test_annotations = np.asarray(test_annotations_lsit)
 
-                if NO_RESIZE == True:
-                    # 这一步只在数据不resize的时候使用
-                    test_images_list = list(test_images)
-                    test_annotations_lsit = list(test_annotations)
-                    test_images = np.asarray(test_images_list)
-                    test_annotations = np.asarray(test_annotations_lsit)
+                    feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
+                    test_preds = sess.run(pred, feed_dict=feed_dict)
 
-                feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
-                test_preds = sess.run(pred, feed_dict=feed_dict)
+                    test_images = np.squeeze(test_images)
+                    test_annotations = np.squeeze(test_annotations)
+                    test_preds = np.squeeze(test_preds)
 
-                test_images = np.squeeze(test_images)
-                test_annotations = np.squeeze(test_annotations)
-                test_preds = np.squeeze(test_preds)
+                    test_images_path = RESULT_DIR + "MIT_img_"  + str(test_idx) + ".png"
+                    test_annos_path  = RESULT_DIR + "MIT_anno_" + str(test_idx) + ".png"
+                    test_preds_path  = RESULT_DIR + "MIT_pred_" + str(test_idx) + ".png"
 
-                test_images_path = RESULT_DIR + "PASCAL_img_"  + str(test_idx) + ".png"
-                test_annos_path  = RESULT_DIR + "PASCAL_anno_" + str(test_idx) + ".png"
-                test_preds_path  = RESULT_DIR + "PASCAL_pred_" + str(test_idx) + ".png"
+                    misc.imsave(test_images_path, test_images.astype(np.uint8))
+                    misc.imsave(test_annos_path, test_annotations.astype(np.uint8))
+                    misc.imsave(test_preds_path, test_preds.astype(np.uint8))
 
-                misc.imsave(test_images_path, test_images.astype(np.uint8))
-                misc.imsave(test_annos_path, test_annotations.astype(np.uint8))
-                misc.imsave(test_preds_path, test_preds.astype(np.uint8))
+            elif DATASET == "PASCAL":
+                for test_idx in range(500):
+                    print("PASCAL Test image: %d" % test_idx)
+                    test_images, test_annotations = val_dataset.get_next_batch(1)
+
+                    if NO_RESIZE == True:
+                        # 这一步只在数据不resize的时候使用
+                        test_images_list = list(test_images)
+                        test_annotations_lsit = list(test_annotations)
+                        test_images = np.asarray(test_images_list)
+                        test_annotations = np.asarray(test_annotations_lsit)
+
+                    feed_dict = {images: test_images, annotation: test_annotations, keep_probability: 1.0}
+                    test_preds = sess.run(pred, feed_dict=feed_dict)
+
+                    test_images = np.squeeze(test_images)
+                    test_annotations = np.squeeze(test_annotations)
+                    test_preds = np.squeeze(test_preds)
+
+                    test_images_path = RESULT_DIR + "PASCAL_img_"  + str(test_idx) + ".png"
+                    test_annos_path  = RESULT_DIR + "PASCAL_anno_" + str(test_idx) + ".png"
+                    test_preds_path  = RESULT_DIR + "PASCAL_pred_" + str(test_idx) + ".png"
+
+                    misc.imsave(test_images_path, test_images.astype(np.uint8))
+                    misc.imsave(test_annos_path, test_annotations.astype(np.uint8))
+                    misc.imsave(test_preds_path, test_preds.astype(np.uint8))
 
 
 if __name__ == "__main__":

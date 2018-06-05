@@ -9,8 +9,8 @@ import scipy.misc as misc
 
 import model.fcn32_vgg as FCN32
 import model.fcn16_vgg as FCN16
-# import model.fcn8_vgg as FCN8
-import model.fcn8_vgg_notrain as FCN8
+import model.fcn8_vgg as FCN8
+# import model.fcn8_vgg_notrain as FCN8
 
 from utils import ReadDataset
 from utils import utlis

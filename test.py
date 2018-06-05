@@ -208,14 +208,22 @@ def main(argv=None):
         summary_writer = tf.summary.FileWriter(LOGS_DIR, sess.graph)
         # 初始化所有参数
         sess.run(tf.global_variables_initializer())
+
+        model_index_list = [0,2,4,6,8]
+        result_dir_list = ["pascalresult_50000", "pascalresult_55000", "pascalresult_60000", "pascalresult_65000",
+                           "pascalresult_70000", "pascalresult_75000", "pascalresult_80000", "pascalresult_85000",
+                           "pascalresult_90000", "pascalresult_95000"]
+        # for model_index in model_index_list:
+
         # 判断是否有训练过的模型，即ckpt文件，有的话直接读取
         ckpt = tf.train.get_checkpoint_state(LOGS_DIR)
         if ckpt and ckpt.model_checkpoint_path:
-            model_index = 0
+            model_index = 2
             saver.restore(sess, ckpt.all_model_checkpoint_paths[model_index])
             print("Model path: " + LOGS_DIR + ckpt.all_model_checkpoint_paths[model_index])
             print("Model restored...")
         ## *************************************************************************************************************
+        RESULT_DIR = result_dir_list[model_index]
 
         if DATASET == "MIT":
             for test_idx in range(2000):

@@ -7,10 +7,11 @@
     "MAX_ITERATION" : 100001,
     "LEARNING_RATE" : 1e-4,
     "KEEP_PROBABILITY" : 0.85,
+    "NO_RESIZE" : true,
     "DEBUG" : true,
     "MODE" : "train",
-    "LOGS_DIR" : "pascalogs_no_resize/",
-    "RESULT_DIR" : "pascalresult_train_no_resize/",
+    "LOGS_DIR" : "pascalogs/",
+    "RESULT_DIR" : "pascalresult_test_no_resize/",
     "DATASET" : "PASCAL",
     "PASCAL_DIR" : "/DATA/234/gxrao1/DeepLearning/VOC2012",
     "MIT_DIR" : "/DATA/234/gxrao1/DeepLearning/FCN.tensorflow/Data_zoo/MIT_SceneParsing"

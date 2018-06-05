@@ -9,8 +9,8 @@ import scipy.misc as misc
 
 import model.fcn32_vgg as FCN32
 import model.fcn16_vgg as FCN16
-#import model.fcn8_vgg as FCN8
-import model.fcn8_vgg_notrain as FCN8
+import model.fcn8_vgg as FCN8
+# import model.fcn8_vgg_notrain as FCN8
 
 from utils import ReadDataset
 from utils import utlis
@@ -20,7 +20,7 @@ from utils import ReadMITSceneParing
 
 # 设置使用的GPU编号
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-NO_RESIZE = False
+
 
 # 参数列表
 IMAGE_WIDTH = None
@@ -31,6 +31,7 @@ NUM_CLASSES = None
 MAX_ITERATION = None
 LEARNING_RATE = None
 KEEP_PROBABILITY = None
+NO_RESIZE = None
 DEBUG = None
 MODE = None
 LOGS_DIR = None
@@ -72,6 +73,8 @@ def main(argv=None):
     LEARNING_RATE = params_dict["LEARNING_RATE"]
     global KEEP_PROBABILITY
     KEEP_PROBABILITY = params_dict["KEEP_PROBABILITY"]
+    global NO_RESIZE
+    NO_RESIZE = params_dict["NO_RESIZE"]
     global DEBUG
     DEBUG = params_dict["DEBUG"]
     global MODE
@@ -208,6 +211,7 @@ def main(argv=None):
         ckpt = tf.train.get_checkpoint_state(LOGS_DIR)
         if ckpt and ckpt.model_checkpoint_path:
             saver.restore(sess, ckpt.model_checkpoint_path)
+            print("Model path: " + LOGS_DIR)
             print("Model restored...")
         ## *************************************************************************************************************
 

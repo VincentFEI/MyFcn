@@ -7,7 +7,7 @@
     "MAX_ITERATION" : 100001,
     "LEARNING_RATE" : 1e-4,
     "KEEP_PROBABILITY" : 0.85,
-    "NO_RESIZE" : false,
+    "NO_RESIZE" : true,
     "DEBUG" : true,
     "MODE" : "train",
     "LOGS_DIR" : "pascalogs_no_resize/",

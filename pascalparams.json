@@ -8,7 +8,7 @@
     "LEARNING_RATE" : 1e-4,
     "KEEP_PROBABILITY" : 0.85,
     "DEBUG" : true,
-    "MODE" : "test",
+    "MODE" : "train",
     "LOGS_DIR" : "pascalogs/",
     "RESULT_DIR" : "pascalresult/",
     "DATASET" : "PASCAL",

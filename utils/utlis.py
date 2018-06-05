@@ -60,21 +60,6 @@ def sparse_softmax_cross_entropy_ignore_labels(logits=None, labels=None, name=No
 #     return image, annotation
 
 
-# from utils import ReadDataset
-# if __name__ == '__main__':
-#     train_image_path = "/home/vincentfei/PycharmProjects/dataset/leftImg8bit/train"
-#     train_label_path = "/home/vincentfei/PycharmProjects/dataset/gtFine/train"
-#     # train_dataset = ReadDataset.ReadDataset(image_path=train_image_path, label_path=train_label_path)
-#
-#     train_dataset = ReadDataset.ReadDataset(image_path=train_image_path)
-#     start = time.time()
-#     batch = train_dataset.get_next_batch(2)
-#     end = time.time()
-#     print("Times cost : ", float(end-start))
-#     print(batch[0].shape)
-#     batch = train_dataset.get_next_batch(2)
-#     batch = train_dataset.get_next_batch(2)
-#     batch = train_dataset.get_next_batch(2)
 
 
 

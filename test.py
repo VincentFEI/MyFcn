@@ -90,6 +90,10 @@ def main(argv=None):
     global MIT_DIR
     MIT_DIR = params_dict["MIT_DIR"]
 
+    ckpt = tf.train.get_checkpoint_state(LOGS_DIR)
+    print(ckpt)
+
+    '''
     # 读取数据
 
     # # CityScapes Dataset
@@ -268,7 +272,7 @@ def main(argv=None):
                 misc.imsave(test_images_path, test_images.astype(np.uint8))
                 misc.imsave(test_annos_path, test_annotations.astype(np.uint8))
                 misc.imsave(test_preds_path, test_preds.astype(np.uint8))
-
+    '''
 
 if __name__ == "__main__":
     tf.app.run()

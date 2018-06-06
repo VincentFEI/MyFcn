@@ -209,23 +209,27 @@ def main(argv=None):
         # 初始化所有参数
         sess.run(tf.global_variables_initializer())
 
-        model_index_list = [2,4,6,8]
-        result_dir_list = ["pascalresult_50000/", "pascalresult_55000/", "pascalresult_60000/", "pascalresult_65000/",
-                           "pascalresult_70000/", "pascalresult_75000/", "pascalresult_80000/", "pascalresult_85000/",
-                           "pascalresult_90000/", "pascalresult_95000/"]
+        model_index_list = [0,2,4,6,8]
+        # result_dir_list = ["pascalresult_50000/", "pascalresult_55000/", "pascalresult_60000/", "pascalresult_65000/",
+        #                    "pascalresult_70000/", "pascalresult_75000/", "pascalresult_80000/", "pascalresult_85000/",
+        #                    "pascalresult_90000/", "pascalresult_95000/"]
+        result_dir_list = ["mitresult_50000/", "mitresult_55000/", "mitresult_60000/", "mitresult_65000/",
+                           "mitresult_70000/", "mitresult_75000/", "mitresult_80000/", "mitresult_85000/",
+                           "mitresult_90000/", "mitresult_95000/"]
         for model_index in model_index_list:
 
             RESULT_DIR = result_dir_list[model_index]
-            # Pascal VOC Dataset
-            train_records, valid_records = ReadPascalVOC.read_dataset(PASCAL_DIR)
+
+            # MIT SceneParsing Dataset
+            train_records, valid_records = ReadMITSceneParing.read_dataset(MIT_DIR)
 
             if NO_RESIZE == True:
                 image_options = {'resize': False}
             else:
                 image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
 
-            val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
 
+            val_dataset = BatchDatsetReader.BatchDatset(valid_records, image_options)
 
             # 判断是否有训练过的模型，即ckpt文件，有的话直接读取
             ckpt = tf.train.get_checkpoint_state(LOGS_DIR)

@@ -9,8 +9,8 @@
     "KEEP_PROBABILITY" : 0.85,
     "DEBUG" : true,
     "MODE" : "train",
-    "LOGS_DIR" : "mitlogs_no_resize/",
-    "RESULT_DIR" : "mitresult/",
+    "LOGS_DIR" : "mitlogs/",
+    "RESULT_DIR" : "mitresult_50000/",
     "DATASET" : "MIT",
     "PASCAL_DIR" : "/DATA/234/gxrao1/DeepLearning/VOC2012",
     "MIT_DIR" : "/DATA/234/gxrao1/DeepLearning/FCN.tensorflow/Data_zoo/MIT_SceneParsing"
